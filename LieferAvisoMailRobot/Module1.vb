@@ -180,6 +180,7 @@ Module Module1
             If strMailBody(i).IndexOf(My.Settings.CustNoSearchKey) > -1 Then
                 If Len(strMailBody(i)) > Len("Kundennummer:") Then
                     sCustNo = strMailBody(i).Replace("Kundennummer:", "").Trim.Replace("-", "")
+                    If sCustNo = "28197350" Then sCustNo = "28111907"
                 Else
                     For j = i To UBound(strMailBody) 'For j = i + 1 To UBound(strMailBody)
                         If Len(strMailBody(j)) >= 9 Then
@@ -191,8 +192,8 @@ Module Module1
             End If
                 'Find Adressdata based on keyword
                 If strMailBody(i).IndexOf(My.Settings.AdressSearchKeyWord) > -1 Then
-                    sAdress1 = System.Text.RegularExpressions.Regex.Replace(strMailBody(i + 1), "<.*?>", "").Trim 'Löscht HTML Tags in Kundennamen (zb. Mobile.com)
-                    sAdress1 = System.Text.RegularExpressions.Regex.Replace(sAdress1, "  +", " ") 'Kürzt mehrfache Leerzeichen zu einem  
+                    sAdress1 = System.Text.RegularExpressions.Regex.Replace(strMailBody(i + 1), "<.*?> ", "").Trim 'Löscht HTML Tags in Kundennamen (zb. Mobile.com)
+                    sAdress1 = System.Text.RegularExpressions.Regex.Replace(sAdress1, " + ", " Then ") 'Kürzt mehrfache Leerzeichen zu einem  
                     sAdress2 = strMailBody(i + 2).Trim
                     sAdress3 = strMailBody(i + 3).Trim
                     sZipCity = strMailBody(i + 4).Trim
@@ -217,8 +218,8 @@ Module Module1
         Dim returnValue As Object
 
 
-        cmd.CommandText = "SELECT eMail FROM [Tools].[dbo].[Lieferbestätigung_an_Suffix] WHERE RTRIM(CUST_NO)+RTRIM(Suffix) = " &
-                               "(SELECT RTRIM(branch_customer_nbr)+RTRIM(suffix) FROM [DSS001].[dbo].[dss_customer_location] " &
+        cmd.CommandText = "Select eMail FROM [Tools].[dbo].[Lieferbestätigung_an_Suffix] WHERE RTRIM(CUST_NO)+RTRIM(Suffix) = " &
+                               "(Select RTRIM(branch_customer_nbr)+RTRIM(suffix) FROM [DSS001].[dbo].[dss_customer_location] " &
                                "WHERE RTRIM([branch_customer_nbr])+RTRIM([cust_add1])+RTRIM([cust_add2])+RTRIM([cust_add3])+RTRIM([cust_city]) = '" & sAdressData & "')"
         cmd.CommandType = CommandType.Text
         cmd.Connection = sqlConnection1
